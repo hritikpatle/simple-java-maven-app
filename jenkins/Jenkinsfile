@@ -28,16 +28,22 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh 'xvfb-run mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
+stage('Test') {
+    steps {
+        script {
+            // Start Xvfb manually
+            sh 'Xvfb :99 -ac -screen 0 1280x1024x24 &'
+            env.DISPLAY = ":99"
         }
+        // Run tests with DISPLAY set
+        sh 'mvn test'
+    }
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+    }
+}
 
         stage('SonarQube Analysis') {
             steps {
