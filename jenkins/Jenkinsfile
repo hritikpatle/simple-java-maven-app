@@ -10,10 +10,15 @@ pipeline {
         SONAR_SCANNER_HOME = tool 'SonarQubeScanner'
     }
 
-    stages {
+
+ stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/hritikpatle/simple-java-maven-app.git'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/hritikpatle/simple-java-maven-app.git']]
+                ])
             }
         }
 
